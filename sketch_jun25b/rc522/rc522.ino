@@ -19,7 +19,8 @@ SoftwareSerial mySerial(16, 17);  // RX, TXs
 const char* ssid = "wifi-iot";
 const char* password = "password-iot";
 #define BOTtoken "7677233055:AAE9_XhKSiMq-msTKTRQCBB9tTk44nIe-BQ"
-#define CHAT_ID "1816785506"
+#define CHAT_ID "6353193463"
+
 
 String UID = "";
 String sensor = "";
@@ -38,7 +39,7 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // ===== Server =====
 const char* server_url = "http://labrobotika.go-web.my.id/server.php?apikey=";
-const char* apikey = "bd5fd6939fa41f237f93529bad99cf62";
+const char* apikey = "1d63b940dbab551d5da9ae0cec003134";
 DynamicJsonDocument data(2048);
 
 // UID valid
@@ -82,7 +83,7 @@ void prosesData(String sensor = "", String uid = "") {
   if (sensor == "") {
     url = String(server_url) + String(apikey);
   } else {
-    url = String(server_url) + String(apikey) + "&" + sensor + "=" + uid;
+    url = String(server_url) + String(apikey) + "&rfid_" + sensor + "=" + uid;
   }
   url.replace(" ", "%20");
   Serial.println("Request ke: " + url);
@@ -173,7 +174,7 @@ void cek_UID() {
     if (valid) {
       Serial.println("✅ Kartu Valid - Relay ON");
       bot.sendMessage(CHAT_ID, "✅ " + sensor + " - Kartu Valid: " + UID);
-      debug("Kartu Valid ", 1, 0);
+      debug("Kartu Valid ", 1, 1);
       digitalWrite(RELAY_PIN, LOW);
       delay(3000);
       digitalWrite(RELAY_PIN, HIGH);
@@ -185,7 +186,7 @@ void cek_UID() {
     } else {
       Serial.println("❌ Kartu Tidak Dikenal");
       bot.sendMessage(CHAT_ID, "❌ " + sensor + " - Kartu Tidak Dikenal: " + UID);
-      debug("Kartu Tidak Dikenal", 1, 0);
+      debug("Kartu Tidak Dikenal", 1, 1);
       delay(3000);
     }
 
@@ -209,7 +210,8 @@ void loop() {
     if (data != "READY") {
       UID = data;
       sensor = "PN532";
-      debug("UID: " + UID);
+      debug("UID: ");
+      debug(UID,1,0);
     }
   }
 
@@ -230,7 +232,8 @@ void loop() {
       UID = uidStr;
       sensor = "RC522";
       Serial.println("📡 UID Terdeteksi: " + uidStr);
-      debug("UID: " + UID);
+      debug("UID: ");
+      debug(UID,1,0);
       rfid.PICC_HaltA();
       rfid.PCD_StopCrypto1();
     }
