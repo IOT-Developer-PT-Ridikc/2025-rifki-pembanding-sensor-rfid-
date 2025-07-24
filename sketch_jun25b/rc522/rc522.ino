@@ -156,9 +156,6 @@ void setup() {
 }
 
 
-
-
-
 void cek_UID() {
   Serial.println("CEK UID .... ");
   if (UID != "") {
@@ -243,7 +240,7 @@ void loop() {
   if (!rfid.PICC_IsNewCardPresent() && !rfid.PICC_ReadCardSerial() && cardDetected) {
     lastUID = "";
     cardDetected = false;
-  }
+  } 
 
   cek_UID();
   delay(100);
